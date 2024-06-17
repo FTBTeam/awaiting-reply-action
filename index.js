@@ -45,12 +45,6 @@ const debugLog = (message) => {
 
         if (debug) core.info(`Event: ${ctx.eventName}`)
         if (debug) core.info(`Action: ${ctx.payload.action}`)
-        if (debug) core.info(`Issue number: ${ctx.payload.issue.number}`)
-        if (debug) core.info(`Issue state: ${ctx.payload.issue.state}`)
-        if (debug) core.info(`Comment user: ${ctx.payload.comment.user.login}`)
-        if (debug) core.info(`Issue user: ${ctx.payload.issue.user.login}`)
-        if (debug) core.info(`Repo owner: ${ctx.repo.owner}`)
-        if (debug) core.info(`Repo name: ${ctx.repo.repo}`)
 
         if (ctx.eventName === 'issue_comment' && ctx.payload.action === 'created') {
             debugLog('Issue comment created event detected')
@@ -122,12 +116,14 @@ const debugLog = (message) => {
             }
 
             if (commenterIsOrgMember) {
-                octokit.rest.issues.addLabels({
-                    owner: ctx.repo.owner,
-                    repo: ctx.repo.repo,
-                    issue_number: ctx.payload.issue.number,
-                    labels: [label]
-                })
+                if (!hasLabel(label, issue)){
+                    octokit.rest.issues.addLabels({
+                        owner: ctx.repo.owner,
+                        repo: ctx.repo.repo,
+                        issue_number: ctx.payload.issue.number,
+                        labels: [label]
+                    })
+                }
             } else {
                 if (removeOnlyIfAuthor && !isCommenterAuthor) {
                     core.info(`Commenter is not author, skipping`)
