@@ -1,0 +1,26 @@
+name: 'Awaiting Reply'
+description: 'This action adds an "Awaiting Reply" label to issues when a team member comments on an issue'
+inputs:
+    token:
+        description: 'GitHub Token'
+        required: false
+        default: ${{ github.token }}
+    label:
+        description: 'Label to add when a team member comments on an issue'
+        required: true
+        default: 'Awaiting Reply'
+    ignore-labels:
+        description: 'Labels to ignore when adding the label'
+        required: false
+    exclude-users:
+        description: 'Ignore adding the label when these users comment on an issue'
+        required: false
+    remove-only-if-author:
+        description: 'Remove the label only if the author of the issue comments'
+        required: true
+    debug:
+        description: 'Enable debug mode'
+        required: false
+runs:
+    using: 'node20'
+    main: 'dist/index.js'
