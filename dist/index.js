@@ -31102,8 +31102,6 @@ const debugLog = (message) => {
         const debug = Boolean(core.getInput('debug'));
         if (debug) {
             core.info(`Debug enabled: ${debug}`)
-            // const payload = JSON.stringify(github.context.payload, undefined, 2)
-            // console.log(`The event payload: ${payload}`);
         }
 
         const label = core.getInput('label');
@@ -31165,23 +31163,6 @@ const debugLog = (message) => {
                 }
             }
 
-            /*let commenterIsCollaborator = false;
-            try {
-                if (debug) core.info('Checking if issue author is a repo collaborator')
-                const {status} = await octokit.rest.repos.checkCollaborator({
-                    owner: ctx.repo.owner,
-                    repo: ctx.repo.repo,
-                    username: issue.user.login
-                })
-                if (status === 204) commenterIsCollaborator = true;
-            } catch (error) {
-                if (error.status === 404) {
-                    core.info('User is not an org member')
-                }else{
-                    core.error(error.response.data.message)
-                }
-            }*/
-
             const isCommenterExcluded = excludeUsersList.includes(ctx.payload.comment.user.login);
             if (isCommenterExcluded) {
                 core.info(`Commenter is excluded: ${ctx.payload.comment.user.login}`)
@@ -31192,7 +31173,6 @@ const debugLog = (message) => {
             if (debug){
                 core.info(`Commenter is author: ${isCommenterAuthor}`)
                 core.info(`Commenter is org member: ${commenterIsOrgMember}`)
-                // core.info(`Commenter is collaborator: ${commenterIsCollaborator}`)
             }
 
             if (commenterIsOrgMember) {
@@ -31218,12 +31198,6 @@ const debugLog = (message) => {
                     })
                 }
             }
-
-
-
-            if (debug) core.info(JSON.stringify(issue, undefined, 2))
-
-
         }
 
     } catch (error) {
