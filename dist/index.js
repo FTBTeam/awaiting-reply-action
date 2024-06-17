@@ -31191,11 +31191,6 @@ const debugLog = (message) => {
                 // core.info(`Commenter is collaborator: ${commenterIsCollaborator}`)
             }
 
-            if (removeOnlyIfAuthor && !isCommenterAuthor) {
-                core.info(`Commenter is not author, skipping`)
-                return null
-            }
-
             if (commenterIsOrgMember) {
                 octokit.rest.issues.addLabels({
                     owner: ctx.repo.owner,
@@ -31204,7 +31199,10 @@ const debugLog = (message) => {
                     labels: [label]
                 })
             } else {
-
+                if (removeOnlyIfAuthor && !isCommenterAuthor) {
+                    core.info(`Commenter is not author, skipping`)
+                    return null
+                }
             }
 
 
