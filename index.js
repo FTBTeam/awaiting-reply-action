@@ -35,6 +35,7 @@ const debugLog = (message) => {
 
         const excludeUsers = core.getInput('exclude-users');
         if (debug) core.info(`Exclude users: ${excludeUsers}`)
+        const excludeUsersList = excludeUsers.split(',').map(m => m.trim());
 
         const removeOnlyIfAuthor = Boolean(core.getInput('remove-only-if-author'));
         if (debug) core.info(`Remove only if author: ${removeOnlyIfAuthor}`)
@@ -73,11 +74,24 @@ const debugLog = (message) => {
 
                 if (status === 204) commenterIsOrgMember = true;
             } catch (error) {
-                if (debug){
-                    core.info(JSON.stringify(error, undefined, 2))
+                if (error.status === 404) {
+                    core.info('User is not an org member')
+                }else{
+                    core.error(error.response.data.message)
                 }
             }
 
+            const isCommenterExcluded = excludeUsersList.includes(ctx.payload.comment.user.login);
+            if (isCommenterExcluded) {
+                core.info(`Commenter is excluded: ${ctx.payload.comment.user.login}`)
+                return null
+            }
+
+            const isCommenterAuthor = ctx.payload.comment.user.id === ctx.payload.issue.user.id;
+            if (debug){
+                core.info(`Commenter is author: ${isCommenterAuthor}`)
+                core.info(`Commenter is org member: ${commenterIsOrgMember}`)
+            }
 
             if (debug) core.info(JSON.stringify(issue, undefined, 2))
 
