@@ -31157,8 +31157,7 @@ const debugLog = (message) => {
                 if (!token) return core.setFailed('Token is required')
                 const {status} = await octokit.rest.orgs.checkMembershipForUser({
                     org: ctx.repo.owner,
-                    username: ctx.payload.comment.user.login,
-                    token: token
+                    username: ctx.payload.comment.user.login
                 })
                 if (debug) core.info('User status: ' + status + '\n204 = requester is a member of the organization\n302 = requester is not a member of the organization\n404 = requester is an organization member and user is not')
 
