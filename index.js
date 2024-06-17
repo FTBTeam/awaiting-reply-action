@@ -20,7 +20,7 @@ const debugLog = (message) => {
 (async () => {
     try {
         const debug = Boolean(core.getInput('debug'));
-        if (debug){
+        if (debug) {
             core.info(`Debug enabled: ${debug}`)
             // Get the JSON webhook payload for the event that triggered the workflow
             const payload = JSON.stringify(github.context.payload, undefined, 2)
@@ -45,14 +45,14 @@ const debugLog = (message) => {
 
         if (debug) core.info(`Event: ${ctx.eventName}`)
 
-        if (ctx.eventName === 'issue_comment' && ctx.payload.action === 'created'){
+        if (ctx.eventName === 'issue_comment' && ctx.payload.action === 'created') {
             debugLog('Issue comment created event detected')
-            if (ignoreLabels && hasLabel(ignoreLabels, ctx.payload.issue)){
+            if (ignoreLabels && hasLabel(ignoreLabels, ctx.payload.issue)) {
                 core.info(`Issue has ignore label: ${ignoreLabels}`)
                 return null
             }
 
-            const issue = await octokit.rest.issues.get({
+            const {data: issue} = await octokit.rest.issues.get({
                 owner: ctx.repo.owner,
                 repo: ctx.repo.repo,
                 issue_number: ctx.payload.issue.number
