@@ -31213,6 +31213,14 @@ const debugLog = (message) => {
                     core.info(`Commenter is not author, skipping`)
                     return null
                 }
+                if (hasLabel(label, issue)) {
+                    octokit.rest.issues.removeLabel({
+                        owner: ctx.repo.owner,
+                        repo: ctx.repo.repo,
+                        issue_number: ctx.payload.issue.number,
+                        name: label
+                    })
+                }
             }
 
 
