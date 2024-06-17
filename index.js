@@ -74,7 +74,7 @@ const debugLog = (message) => {
 
                 if (status === 204) commenterIsOrgMember = true;
             } catch (error) {
-                if (debug) core.info('User status: ' + status + '\n204 = requester is a member of the organization\n302 = requester is not a member of the organization\n404 = requester is an organization member and user is not')
+                if (debug) core.info('User status: ' + error.status + '\n204 = requester is a member of the organization\n302 = requester is not a member of the organization\n404 = requester is an organization member and user is not')
                 if (error.status === 404) {
                     core.info('User is not an org member')
                 }else{
