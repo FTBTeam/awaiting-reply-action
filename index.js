@@ -22,9 +22,8 @@ const debugLog = (message) => {
         const debug = Boolean(core.getInput('debug'));
         if (debug) {
             core.info(`Debug enabled: ${debug}`)
-            // Get the JSON webhook payload for the event that triggered the workflow
-            const payload = JSON.stringify(github.context.payload, undefined, 2)
-            console.log(`The event payload: ${payload}`);
+            // const payload = JSON.stringify(github.context.payload, undefined, 2)
+            // console.log(`The event payload: ${payload}`);
         }
 
         const label = core.getInput('label');
@@ -57,7 +56,14 @@ const debugLog = (message) => {
                 repo: ctx.repo.repo,
                 issue_number: ctx.payload.issue.number
             })
+
+            if (issue.state === 'closed') {
+                core.info(`Issue is closed, skipping`)
+                return null
+            }
+
             if (debug) core.info(JSON.stringify(issue, undefined, 2))
+
 
         }
 
