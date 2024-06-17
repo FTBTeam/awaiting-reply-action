@@ -31153,9 +31153,12 @@ const debugLog = (message) => {
            let commenterIsOrgMember = false;
             try {
                 if (debug) core.info('Checking if comment is made by an org member\nUser:' + ctx.payload.comment.user.login)
+                const token = core.getInput('token');
+                if (!token) return core.setFailed('Token is required')
                 const {status} = await octokit.rest.orgs.checkMembershipForUser({
                     org: ctx.repo.owner,
-                    username: ctx.payload.comment.user.login
+                    username: ctx.payload.comment.user.login,
+                    token: token
                 })
                 if (debug) core.info('User status: ' + status + '\n204 = requester is a member of the organization\n302 = requester is not a member of the organization\n404 = requester is an organization member and user is not')
 
