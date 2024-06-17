@@ -44,6 +44,13 @@ const debugLog = (message) => {
         const ctx = github.context;
 
         if (debug) core.info(`Event: ${ctx.eventName}`)
+        if (debug) core.info(`Action: ${ctx.payload.action}`)
+        if (debug) core.info(`Issue number: ${ctx.payload.issue.number}`)
+        if (debug) core.info(`Issue state: ${ctx.payload.issue.state}`)
+        if (debug) core.info(`Comment user: ${ctx.payload.comment.user.login}`)
+        if (debug) core.info(`Issue user: ${ctx.payload.issue.user.login}`)
+        if (debug) core.info(`Repo owner: ${ctx.repo.owner}`)
+        if (debug) core.info(`Repo name: ${ctx.repo.repo}`)
 
         if (ctx.eventName === 'issue_comment' && ctx.payload.action === 'created') {
             debugLog('Issue comment created event detected')
