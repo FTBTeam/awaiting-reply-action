@@ -18,6 +18,7 @@ inputs:
     remove-only-if-author:
         description: 'Remove the label only if the author of the issue comments'
         required: true
+        default: 'true'
     debug:
         description: 'Enable debug mode'
         required: false
