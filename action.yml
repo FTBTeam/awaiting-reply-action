@@ -6,7 +6,7 @@ inputs:
         required: false
         default: ${{ github.token }}
     label:
-        description: 'Label to add when a team member comments on an issue'
+        description: 'Label to toggle when a team member comments on an issue'
         required: true
         default: 'Awaiting Reply'
     ignore-labels:
