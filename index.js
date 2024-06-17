@@ -62,6 +62,16 @@ const debugLog = (message) => {
                 return null
             }
 
+            let commenterIsOrgMember = false;
+            if (debug) core.info('Checking if comment is made by an org member')
+            const {status} = await octokit.rest.orgs.checkMembershipForUser({
+                org: ctx.repo.owner,
+                username: ctx.payload.comment.user.login
+            })
+            if (debug) core.info('User status: ' + status + '\n204 = requester is a member of the organization\n302 = requester is not a member of the organization\n404 = requester is an organization member and user is not')
+
+            if (status === 204) commenterIsOrgMember = true;
+
             if (debug) core.info(JSON.stringify(issue, undefined, 2))
 
 
