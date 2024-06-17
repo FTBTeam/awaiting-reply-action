@@ -31145,7 +31145,7 @@ const debugLog = (message) => {
 
            let commenterIsOrgMember = false;
             try {
-                if (debug) core.info('Checking if comment is made by an org member')
+                if (debug) core.info('Checking if comment is made by an org member\nUser:' + ctx.payload.comment.user.login)
                 const {status} = await octokit.rest.orgs.checkMembershipForUser({
                     org: ctx.repo.owner,
                     username: ctx.payload.comment.user.login
