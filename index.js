@@ -12,11 +12,6 @@ const hasLabel = (label, issue) => {
     return lMap.includes(label);
 }
 
-const debugLog = (message) => {
-    const debug = Boolean(core.getInput('debug'));
-    if (debug) core.info(message)
-}
-
 (async () => {
     try {
         const debug = Boolean(core.getInput('debug'));
@@ -38,6 +33,9 @@ const debugLog = (message) => {
         const removeOnlyIfAuthor = Boolean(core.getInput('remove-only-if-author'));
         if (debug) core.info(`Remove only if author: ${removeOnlyIfAuthor}`)
 
+        const ignoreString = Boolean(core.getInput('ignore-string'));
+        if (debug) core.info(`Ignore comment with string: ${ignoreString}`)
+
         const octokit = getOctokit();
         const ctx = github.context;
 
@@ -45,11 +43,13 @@ const debugLog = (message) => {
         if (debug) core.info(`Action: ${ctx.payload.action}`)
 
         if (ctx.eventName === 'issue_comment' && ctx.payload.action === 'created') {
-            debugLog('Issue comment created event detected')
+            if (debug) core.info('Issue comment created event detected')
             if (ignoreLabels && hasLabel(ignoreLabels, ctx.payload.issue)) {
                 core.info(`Issue has ignore label: ${ignoreLabels}`)
                 return null
             }
+
+            core.info(`Comment: ${ctx.payload.comment.body}`)
 
             const {data: issue} = await octokit.rest.issues.get({
                 owner: ctx.repo.owner,
