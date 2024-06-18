@@ -33,7 +33,7 @@ const hasLabel = (label, issue) => {
         const removeOnlyIfAuthor = Boolean(core.getInput('remove-only-if-author'));
         if (debug) core.info(`Remove only if author: ${removeOnlyIfAuthor}`)
 
-        const ignoreString = Boolean(core.getInput('ignore-string'));
+        const ignoreString = core.getInput('ignore-string');
         if (debug) core.info(`Ignore comment with string: ${ignoreString}`)
 
         const octokit = getOctokit();
