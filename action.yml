@@ -19,6 +19,10 @@ inputs:
         description: 'Remove the label only if the author of the issue comments'
         required: true
         default: 'true'
+    ignore-string:
+        description: 'Ignore adding the label if the comment contains this string'
+        required: false
+        default: '!ignore'
     debug:
         description: 'Enable debug mode'
         required: false
