@@ -31129,7 +31129,10 @@ const hasLabel = (label, issue) => {
                 return null
             }
 
-            core.info(`Comment: ${ctx.payload.comment.body}`)
+            if (ignoreString && ctx.payload.comment.body.includes(ignoreString)) {
+                core.info(`Comment contains ignore string: ${ignoreString}`)
+                return null
+            }
 
             const {data: issue} = await octokit.rest.issues.get({
                 owner: ctx.repo.owner,
