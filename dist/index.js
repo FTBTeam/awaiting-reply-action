@@ -31129,11 +31129,6 @@ const hasLabel = (label, issue) => {
                 return null
             }
 
-            if (ignoreString && ctx.payload.comment.body.includes(ignoreString)) {
-                core.info(`Comment contains ignore string: ${ignoreString}`)
-                return null
-            }
-
             const {data: issue} = await octokit.rest.issues.get({
                 owner: ctx.repo.owner,
                 repo: ctx.repo.repo,
@@ -31164,6 +31159,11 @@ const hasLabel = (label, issue) => {
                 }else{
                     core.error(error.response.data.message)
                 }
+            }
+
+            if (ignoreString && commenterIsOrgMember && ctx.payload.comment.body.includes(ignoreString)) {
+                core.info(`Comment contains ignore string: ${ignoreString}`)
+                return null
             }
 
             const isCommenterExcluded = excludeUsersList.includes(ctx.payload.comment.user.login);
