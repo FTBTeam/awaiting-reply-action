@@ -31106,6 +31106,10 @@ const hasLabel = (label, issue) => {
         const ignoreLabels = core.getInput('ignore-labels');
         if (debug) core.info(`Ignore labels: ${ignoreLabels}`)
 
+        const removeLabels = core.getInput('remove-labels');
+        if (debug) core.info(`Remove labels: ${removeLabels}`)
+        const removeLabelsList = removeLabels.split(',').map(m => m.trim());
+
         const excludeUsers = core.getInput('exclude-users');
         if (debug) core.info(`Exclude users: ${excludeUsers}`)
         const excludeUsersList = excludeUsers.split(',').map(m => m.trim());
@@ -31140,7 +31144,7 @@ const hasLabel = (label, issue) => {
                 return null
             }
 
-           let commenterIsOrgMember = false;
+            let commenterIsOrgMember = false;
             try {
                 if (debug) core.info('Checking if comment is made by an org member\nUser:' + ctx.payload.comment.user.login)
                 const token = core.getInput('token');
@@ -31156,7 +31160,7 @@ const hasLabel = (label, issue) => {
                 if (debug) core.info('User status: ' + error.status + '\n204 = requester is a member of the organization\n302 = requester is not a member of the organization\n404 = requester is an organization member and user is not')
                 if (error.status === 404) {
                     core.info('User is not an org member')
-                }else{
+                } else {
                     core.error(error.response.data.message)
                 }
             }
@@ -31173,13 +31177,13 @@ const hasLabel = (label, issue) => {
             }
 
             const isCommenterAuthor = ctx.payload.comment.user.id === ctx.payload.issue.user.id;
-            if (debug){
+            if (debug) {
                 core.info(`Commenter is author: ${isCommenterAuthor}`)
                 core.info(`Commenter is org member: ${commenterIsOrgMember}`)
             }
 
             if (commenterIsOrgMember) {
-                if (!hasLabel(label, issue)){
+                if (!hasLabel(label, issue)) {
                     octokit.rest.issues.addLabels({
                         owner: ctx.repo.owner,
                         repo: ctx.repo.repo,
@@ -31200,8 +31204,24 @@ const hasLabel = (label, issue) => {
                         name: label
                     })
                 }
+                if (removeLabelsList.length > 0) {
+                    for (const l of removeLabelsList) {
+                        if (hasLabel(l, issue)) {
+                            if (debug) core.info(`Removing extra label: ${l}`)
+                            octokit.rest.issues.removeLabel({
+                                owner: ctx.repo.owner,
+                                repo: ctx.repo.repo,
+                                issue_number: ctx.payload.issue.number,
+                                name: l
+                            })
+                        }
+                    }
+                }
             }
         }
+        core.info('Statistics:')
+        core.info('API Requests left: ' + JSON.stringify(github.context.payload, undefined, 2))
+        // core.info('Ignore labels: ' + ignoreLabels)
 
     } catch (error) {
         core.setFailed(error.message);
