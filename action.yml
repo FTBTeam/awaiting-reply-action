@@ -10,7 +10,10 @@ inputs:
         required: true
         default: 'Awaiting Reply'
     ignore-labels:
-        description: 'Labels to ignore when adding the label'
+        description: 'Ignore adding the label when these labels are present on the issue'
+        required: false
+    remove-labels:
+        description: 'Additional labels to remove when the awaiting reply label is removed'
         required: false
     exclude-users:
         description: 'Ignore adding the label when these users comment on an issue'
