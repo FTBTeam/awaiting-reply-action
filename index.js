@@ -139,10 +139,6 @@ const hasLabel = (label, issue) => {
                 }
             }
         }
-        core.info('Statistics:')
-        core.info('API Requests left: ' + JSON.stringify(github.context.payload, undefined, 2))
-        // core.info('Ignore labels: ' + ignoreLabels)
-
     } catch (error) {
         core.setFailed(error.message);
     }
