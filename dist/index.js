@@ -31105,6 +31105,7 @@ const hasLabel = (label, issue) => {
 
         const ignoreLabels = core.getInput('ignore-labels');
         if (debug) core.info(`Ignore labels: ${ignoreLabels}`)
+        const ignoreLabelsList = ignoreLabels.split(',').map(m => m.trim());
 
         const removeLabels = core.getInput('remove-labels');
         if (debug) core.info(`Remove labels: ${removeLabels}`)
@@ -31128,9 +31129,13 @@ const hasLabel = (label, issue) => {
 
         if (ctx.eventName === 'issue_comment' && ctx.payload.action === 'created') {
             if (debug) core.info('Issue comment created event detected')
-            if (ignoreLabels && hasLabel(ignoreLabels, ctx.payload.issue)) {
-                core.info(`Issue has ignore label: ${ignoreLabels}`)
-                return null
+            if (ignoreLabelsList.length > 0) {
+                for (const il of ignoreLabelsList) {
+                    if (hasLabel(il, ctx.payload.issue)) {
+                        core.info(`Issue has ignore label: ${l}`)
+                        return null
+                    }
+                }
             }
 
             const {data: issue} = await octokit.rest.issues.get({
