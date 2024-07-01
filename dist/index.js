@@ -31132,7 +31132,7 @@ const hasLabel = (label, issue) => {
             if (ignoreLabelsList.length > 0) {
                 for (const il of ignoreLabelsList) {
                     if (hasLabel(il, ctx.payload.issue)) {
-                        core.info(`Issue has ignore label: ${l}`)
+                        core.info(`Issue has ignore label: ${il}`)
                         return null
                     }
                 }
