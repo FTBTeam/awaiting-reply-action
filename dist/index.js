@@ -31099,9 +31099,13 @@ const hasLabel = (label, issue) => {
             core.info(`Debug enabled: ${debug}`)
         }
 
-        const label = core.getInput('label');
-        if (!label) return core.setFailed('Label is required')
-        if (debug) core.info(`Label to toggle: ${label}`)
+        const awaitingLabel = core.getInput('awaiting-label');
+        if (!awaitingLabel) return core.setFailed('Awaiting label is required')
+        if (debug) core.info(`Label to toggle: ${awaitingLabel}`)
+
+        const repliedLabel = core.getInput('replied-label');
+        if (!repliedLabel) return core.setFailed('Replied label is required')
+        if (debug) core.info(`Label to toggle: ${repliedLabel}`)
 
         const ignoreLabels = core.getInput('ignore-labels');
         if (debug) core.info(`Ignore labels: ${ignoreLabels}`)
@@ -31188,12 +31192,12 @@ const hasLabel = (label, issue) => {
             }
 
             if (commenterIsOrgMember) {
-                if (!hasLabel(label, issue)) {
+                if (!hasLabel(awaitingLabel, issue)) {
                     octokit.rest.issues.addLabels({
                         owner: ctx.repo.owner,
                         repo: ctx.repo.repo,
                         issue_number: ctx.payload.issue.number,
-                        labels: [label]
+                        labels: [awaitingLabel]
                     })
                 }
             } else {
@@ -31201,12 +31205,18 @@ const hasLabel = (label, issue) => {
                     core.info(`Commenter is not author, skipping`)
                     return null
                 }
-                if (hasLabel(label, issue)) {
+                if (hasLabel(awaitingLabel, issue)) {
                     octokit.rest.issues.removeLabel({
                         owner: ctx.repo.owner,
                         repo: ctx.repo.repo,
                         issue_number: ctx.payload.issue.number,
-                        name: label
+                        name: awaitingLabel
+                    })
+                    octokit.rest.issues.addLabels({
+                        owner: ctx.repo.owner,
+                        repo: ctx.repo.repo,
+                        issue_number: ctx.payload.issue.number,
+                        labels: [repliedLabel]
                     })
                 }
                 if (removeLabelsList.length > 0) {

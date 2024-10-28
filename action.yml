@@ -5,10 +5,14 @@ inputs:
         description: 'GitHub Token'
         required: false
         default: ${{ github.token }}
-    label:
+    awaiting-label:
         description: 'Label to toggle when a team member comments on an issue'
         required: true
         default: 'Awaiting Reply'
+    replied-label:
+        description: 'Label to toggle when the author of the issue comments'
+        required: true
+        default: 'Replied'
     ignore-labels:
         description: 'Ignore adding the label when these labels are present on the issue'
         required: false
