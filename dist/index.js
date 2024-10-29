@@ -31199,6 +31199,14 @@ const hasLabel = (label, issue) => {
                         issue_number: ctx.payload.issue.number,
                         labels: [awaitingLabel]
                     })
+                    if (hasLabel(repliedLabel, issue)) {
+                        octokit.rest.issues.removeLabel({
+                            owner: ctx.repo.owner,
+                            repo: ctx.repo.repo,
+                            issue_number: ctx.payload.issue.number,
+                            name: repliedLabel
+                        })
+                    }
                 }
             } else {
                 if (removeOnlyIfAuthor && !isCommenterAuthor) {
@@ -31212,12 +31220,14 @@ const hasLabel = (label, issue) => {
                         issue_number: ctx.payload.issue.number,
                         name: awaitingLabel
                     })
-                    octokit.rest.issues.addLabels({
-                        owner: ctx.repo.owner,
-                        repo: ctx.repo.repo,
-                        issue_number: ctx.payload.issue.number,
-                        labels: [repliedLabel]
-                    })
+                    if (!hasLabel(repliedLabel, issue)) {
+                        octokit.rest.issues.addLabels({
+                            owner: ctx.repo.owner,
+                            repo: ctx.repo.repo,
+                            issue_number: ctx.payload.issue.number,
+                            labels: [repliedLabel]
+                        })
+                    }
                 }
                 if (removeLabelsList.length > 0) {
                     for (const l of removeLabelsList) {
