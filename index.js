@@ -55,7 +55,7 @@ const hasLabel = (label, issue) => {
             if (debug) core.info('Issue comment created event detected')
             if (ignoreLabelsList.length > 0) {
                 for (const il of ignoreLabelsList) {
-                    if (hasLabel(il, ctx.payload.issue)) {
+                    if (hasLabel(il, ctx.payload.issue) && !hasLabel(awaitingLabel, ctx.payload.comment)) {
                         core.info(`Issue has ignore label: ${il}`)
                         return null
                     }
